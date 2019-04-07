@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SwampCTF's Link Fetcher Write-up</title>
+</head>
+<body>
+  <h1>SwampCTF's Link Fetcher Write-up</h1>
+  <p>
+      This is a writeup for SwampCTF's Link Fetcher web challenge.
+      </br>
+      Challenge description:
+      <div>
+        <p>It's the year 1997 and the Internet is just heating up! :fire:
+
+In order to get ahead of the curve, SIT Industries® has introduced it's first Internet product: The Link Saver™. SIT Industries® has been very secretive about this product - even going so far to hire Kernel Sanders® to test the security!
+
+However, The Kernel discovered that The Link Saver had a little bit of an SSRF problem that allowed any user to fetch the code for The Link Saver™ from https://localhost/key and host it themselves :grimacing:. Fortunately, with a lil' parse_url magic, SIT Industries® PHP wizards have patched this finding from Kernel Sanders® and are keeping the code behind this wonderful site secure!
+
+... or have they? :wink:
+
+chal1.swampctf.com:1244
+
+-= Created by andrewjkerr =- </p>
+
+      </div>
+      On our initial visit to the website, we're presented with our information:
+      We get an input box to submit URLs which the site will then link to.
+      </br>
+      <img src = "images/initialvisit.PNG"/>
+      </br>
+      </br>
+      First step, lets take a look at the source code.
+      </br>
+      <img src = "images/source.PNG" />
+      </br>
+      Nothing interesting here, just what we see on the page.
+    </br>
+    </br>
+    Judging from the challenge description, this is an <a href="https://www.acunetix.com/blog/articles/server-side-request-forgery-vulnerability/">SSRF vulnerability</a> which we
+    can exploit using the Submit Query function. However, from the challenge
+    description it seems using localhost / 127.0.0.1 to try and access
+    /localhost/key  will be blocked.
+    </br>
+    </br>
+    <img src = "images/internal1.PNG" />
+    <img src = "images/internal2.PNG" />
+    </br>
+      </br>
+    Yep, blocked.
+    After doing a bit of googling around, it seems there are a few ways to
+    bypass PHP's parse_url function so we can access the key.
+  </br>
+    </br>
+    I managed to locate a presentation put on by "Orange Tsai" at the blackhat
+    USA 2017 conference, located <a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf">here</a>
+    In particular, I found this slide very useful as it contained what I was
+    trying to do - read the /localhost/key file.
+  </br>
+    </br>
+    <img src = "images/slide.png"/>
+      </br>
+  </br>
+    Following this logic, we could use the parse_url function to parse an
+    arbitrary site, in this case google.com, but abuse the PHP readfile functionality
+    to read our desired file.
+      </br>
+    </br>
+    Adapting the payload for our use, we can get the key.
+      </br>
+      </br>
+    <img src = "images/flag.png"/>
+      </br>
+    </br>
+    <strong>flag: flag{y0u_cANn0t_TRU5t_php}</strong>
+  </br>
+</br>
+    I honestly don't know how using "@" to access a local file works, which is something
+    I need to investigate further.
+    Hope you enjoyed this write up
+  </br>
+</br>
+
+
+
+  </p>
+<body>
+</html>
