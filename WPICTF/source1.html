@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WPICTF - Source1 (Pwn Challenge)</title>
+</head>
+<body>
+  <h1>Write up for Source1 - a Pwn Challenge</h1>
+
+  <strong>Challenge Description:</strong>
+</br></br>
+  <div style="background-color:cyan">
+    ssh source@source.wpictf.xyz -p 31337 (or 31338 or 31339). Password is sourcelocker
+  </br>
+Here is your babybuff.
+</br>
+- made by awg
+  </div>
+
+<p> When we ssh in, it requests a password. After trying to put a random password in,
+  it rejects the password and closes the ssh connection.</p>
+</br>
+  <img src="images/auth.PNG"></img>
+</br></br>
+<p>Seeing as we don't really know what's going on in the back-end, my first thought
+is to see if we can overflow the password buffer.
+I entered a whole lot of "a"s to see what would happen.
+</p>
+<img src="images/randomA.PNG"></img>
+</br></br>
+<p> Cool! Seems like we can manage to overflow the buffer and skip some of the operations.
+</p>
+<p>From here, the next thing I did was still to enter a large number of characters, but slightly less than last time.
+</p>
+</br>
+I entered around 110 "a"s, and suddenly it pops up with the program's source code.
+<img src="images/code.PNG"></img>
+</br>
+
+<p> and we get the flag. <strong>WPI{Typos_are_GrEaT!}</strong>
+Honestly I have no idea how this works, so this is something I definitely need
+to figure out. </p>
+
+</br>
+</br>
+<p> hope you enjoyed.</p>
+
+
+
+<body>
+</html>
